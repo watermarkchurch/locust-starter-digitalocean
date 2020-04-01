@@ -1,5 +1,7 @@
 - hosts: all
   become: true
+  roles:
+    - role: '../roles/locust'
   tasks:
     # Set myvar fact for every host in a play
     - set_fact:
@@ -9,3 +11,13 @@
       run_once: yes
     - name: "Add Master to Hosts File"
       lineinfile: dest=/etc/hosts regexp='.*{{ master_ip }}$' line="{{ master_ip }} master" state=present
+    - name: Run locust master in background
+      shell: nohup locust --master </dev/null >/dev/null 2>&1 &
+      args:
+        chdir: /vagrant
+      when: inventory_hostname == 'master'
+    - name: Run locust slave in background
+      shell: nohup locust --slave --master-host=master </dev/null >/dev/null 2>&1 &
+      args:
+        chdir: /vagrant
+      when: inventory_hostname != 'master'
