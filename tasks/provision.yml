@@ -1,2 +1,11 @@
 - hosts: all
   become: true
+  tasks:
+    # Set myvar fact for every host in a play
+    - set_fact:
+        master_ip: "{{ hostvars['master']['ansible_default_ipv4']['address'] }}"
+      delegate_to: "{{ item }}"
+      with_items: "{{ play_hosts }}"
+      run_once: yes
+    - name: "Add Master to Hosts File"
+      lineinfile: dest=/etc/hosts regexp='.*{{ master_ip }}$' line="{{ master_ip }} master" state=present
