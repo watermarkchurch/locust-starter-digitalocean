@@ -77,7 +77,7 @@ class RepresentativeTaskSet(TaskSet):
 ${paths.map((p) => {
   return `
   @task(${p.count})
-  def get_${p.path.replace(/\W/g, '_')}:
+  def get_${p.path.replace(/\W/g, '_')}(self):
     self.client.get("${p.path}")
 `
 }).join('\n')}
