@@ -1,14 +1,25 @@
 #! /usr/bin/env node
 
+const requestsFile = './requests.txt'
+const locustFile = './locustfile.py'
+const numberOfTasks = 20
+
 const fs = require('fs')
 
-const lines = fs.readFileSync('./requests.txt').toString().split('\n')
+if (!fs.existsSync(requestsFile)) {
+  console.error('requests.txt does not exist!\n' +
+    'Please download request logs in this format:\n' +
+    '2020-03-29T13:00:00.668890+00:00 "54.162.189.219" "/dallas"')
+  process.exit(1)
+}
+
+const lines = fs.readFileSync(requestsFile).toString().split('\n')
 
 const byIp = {}
 const byPath = {}
 
 for (const line of lines) {
-  let [ts, ip, path, method, status] = line.split(' ')
+  let [ts, ip, path] = line.split(' ')
   
   if (!ts || ts.length == 0) {
     continue
@@ -37,9 +48,6 @@ for (const ip of Object.keys(byIp)) {
   const min = Date.parse(agg.minTs)
   const max = Date.parse(agg.maxTs)
 
-  if (isNaN(max) || isNaN(min)) {
-    console.log('Nan', agg)
-  }
   activityDurations.push(max - min)
 }
 
@@ -59,19 +67,16 @@ for (const path of Object.keys(byPath)) {
 }
 
 paths.sort((p1, p2) => p2.count - p1.count)
-paths = paths.slice(0, 20)
-paths.forEach((p) => p.proportion = p.count / lines.length)
+paths = paths.slice(0, numberOfTasks)
 
-const factor = 1 / paths[paths.length - 1].proportion
-
-fs.writeFileSync('locustfile.py', `
+fs.writeFileSync(locustFile, `
 from locust import HttpLocust, TaskSet, task, constant_pacing
 from locust.contrib.fasthttp import FastHttpLocust
 
 class RepresentativeTaskSet(TaskSet):
 ${paths.map((p) => {
   return `
-  @task(${Math.floor(p.proportion * factor)})
+  @task(${p.count})
   def get_${p.path.replace(/\W/g, '_')}:
     self.client.get("${p.path}")
 `
