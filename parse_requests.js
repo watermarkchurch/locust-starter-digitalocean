@@ -71,7 +71,6 @@ paths = paths.slice(0, numberOfTasks)
 
 fs.writeFileSync(locustFile, `
 from locust import HttpLocust, TaskSet, task, constant_pacing
-from locust.contrib.fasthttp import FastHttpLocust
 
 class RepresentativeTaskSet(TaskSet):
 ${paths.map((p) => {
@@ -82,7 +81,7 @@ ${paths.map((p) => {
 `
 }).join('\n')}
 
-class MyLocust(FastHttpLocust):
+class MyLocust(HttpLocust):
   task_set = RepresentativeTaskSet
   wait_time = constant_pacing(${Math.floor(1 / medianReqsPerSecond)})
 `)

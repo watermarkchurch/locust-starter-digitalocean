@@ -1,6 +1,5 @@
 
 from locust import HttpLocust, TaskSet, task, constant_pacing
-from locust.contrib.fasthttp import FastHttpLocust
 
 class RepresentativeTaskSet(TaskSet):
 
@@ -104,6 +103,6 @@ class RepresentativeTaskSet(TaskSet):
     self.client.get("/current")
 
 
-class MyLocust(FastHttpLocust):
+class MyLocust(HttpLocust):
   task_set = RepresentativeTaskSet
   wait_time = constant_pacing(4)
