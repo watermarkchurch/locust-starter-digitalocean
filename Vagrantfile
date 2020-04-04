@@ -17,7 +17,8 @@ Vagrant.configure("2") do |config|
     override.vm.allowed_synced_folder_types = :rsync
   end
 
-  (1.upto 2).each do |i|
+  slave_count = ENV['SLAVE_COUNT']&.to_i || 4
+  (1.upto slave_count).each do |i|
     config.vm.define "slave#{i}" do |slave|
     end
   end
