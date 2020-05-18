@@ -1,108 +1,22 @@
 
 from locust import HttpLocust, TaskSet, task, constant_pacing
 
+# This task set is designed to be representative of your users' behavior.  You
+# should auto-generate this from your logs using the `parse_requests.js` script.
+# Or you can hand-create a representative task set.
 class RepresentativeTaskSet(TaskSet):
 
-  @task(27990)
-  def get__active_banner(self):
-    self.client.get("/active_banner")
-
+  @task(27990) # The number of requests to this URL over your sample period.  Defines the proportion.
+  def get__active_banner(self): # A unique name for this Python method
+    self.client.get("/active_banner") # GET the path on your web server
 
   @task(13588)
   def get__live(self):
     self.client.get("/live")
 
-
-  @task(12671)
-  def get__api_v1_playlists_piZu5vHA(self):
-    self.client.get("/api/v1/playlists/piZu5vHA")
-
-
-  @task(7127)
-  def get__packs_js_5_3a1c7fafb428f173e0d5_chunk_js(self):
-    self.client.get("/packs/js/5-3a1c7fafb428f173e0d5.chunk.js")
-
-
-  @task(7126)
-  def get__packs_js_4_e20e4e0b357fb8132df7_chunk_js(self):
-    self.client.get("/packs/js/4-e20e4e0b357fb8132df7.chunk.js")
-
-
-  @task(7014)
-  def get__(self):
-    self.client.get("/")
-
-
-  @task(5938)
-  def get__messages_latest(self):
-    self.client.get("/messages/latest")
-
-
-  @task(2925)
-  def get__dallas(self):
-    self.client.get("/dallas")
-
-
-  @task(2335)
-  def get__plano(self):
-    self.client.get("/plano")
-
-
-  @task(2199)
-  def get__blog_how_to_be_a_godly_man(self):
-    self.client.get("/blog/how-to-be-a-godly-man")
-
-
-  @task(1941)
-  def get__tv(self):
-    self.client.get("/tv")
-
-
-  @task(1683)
-  def get__api_v1_graphql(self):
-    self.client.get("/api/v1/graphql")
-
-
-  @task(1285)
-  def get__kidskit(self):
-    self.client.get("/kidskit")
-
-
-  @task(1276)
-  def get__blog_kidskit_march29(self):
-    self.client.get("/blog/kidskit-march29")
-
-
-  @task(1110)
-  def get__live_dallas(self):
-    self.client.get("/live/dallas")
-
-
-  @task(1017)
-  def get__blog_kidskit_March29(self):
-    self.client.get("/blog/kidskit-March29")
-
-
-  @task(1005)
-  def get__resources_the_current(self):
-    self.client.get("/resources/the-current")
-
-
-  @task(954)
-  def get__the_current(self):
-    self.client.get("/the-current")
-
-
-  @task(827)
-  def get__search_messages(self):
-    self.client.get("/search/messages")
-
-
-  @task(813)
-  def get__current(self):
-    self.client.get("/current")
+  # ... and repeat
 
 
 class MyLocust(HttpLocust):
   task_set = RepresentativeTaskSet
-  wait_time = constant_pacing(4)
+  wait_time = constant_pacing(4) # This number defines how many requests your users make per second.
