@@ -1,3 +1,5 @@
+Archive note: this got moved into the Deployment repo https://github.com/watermarkchurch/deployment/tree/master/tools/locust
+
 # DigitalOcean Locust Starter
 
 This repository is a "Starter Kit" for running load tests on a Digital Ocean
